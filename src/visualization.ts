@@ -12,12 +12,16 @@ export function renderTrainingChart(
   const canvasId = 'tvmai-training-chart';
   let canvas: HTMLCanvasElement;
 
-  // Tentukan elemen target
   if (typeof options.targetElement === 'string') {
     const container = document.getElementById(options.targetElement);
-    if (!container) throw new Error(`Element ${options.targetElement} not found`);
-    canvas = document.createElement('canvas');
-    container.appendChild(canvas);
+    if (container) {
+      canvas = document.createElement('canvas');
+      container.appendChild(canvas);
+    } else {
+      // fallback ke body jika elemen tidak ada
+      canvas = document.createElement('canvas');
+      document.body.appendChild(canvas);
+    }
   } else if (options.targetElement instanceof HTMLElement) {
     canvas = document.createElement('canvas');
     options.targetElement.appendChild(canvas);
@@ -26,6 +30,7 @@ export function renderTrainingChart(
     canvas = existing || document.createElement('canvas');
     document.body.appendChild(canvas);
   }
+
   canvas.id     = canvasId;
   canvas.width  = options.width  ?? 800;
   canvas.height = options.height ?? 600;
@@ -37,6 +42,7 @@ export function renderTrainingChart(
   ctx.fillStyle = options.theme === 'dark' ? '#333' : '#fff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Title
   ctx.font      = '16px Arial';
   ctx.fillStyle = options.theme === 'dark' ? '#fff' : '#000';
   ctx.textAlign = 'center';
@@ -64,13 +70,13 @@ export function renderTrainingChart(
   });
   ctx.stroke();
 
-  // Legend
-  // Loss
+  // Legend: Loss
   ctx.fillStyle = '#e74c3c';
   ctx.fillRect(canvas.width - 160, 50, 15, 15);
   ctx.fillStyle = options.theme === 'dark' ? '#fff' : '#000';
   ctx.fillText('Loss', canvas.width - 135, 62);
-  // Accuracy
+
+  // Legend: Accuracy
   ctx.fillStyle = '#2ecc71';
   ctx.fillRect(canvas.width - 160, 75, 15, 15);
   ctx.fillStyle = options.theme === 'dark' ? '#fff' : '#000';
