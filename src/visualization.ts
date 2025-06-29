@@ -1,4 +1,3 @@
-// src/visualization.ts
 import { TrainingHistory, VisualizationOptions } from './types';
 
 /**
