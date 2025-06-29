@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { simulateTraining } from '../src/simulation';
 import { renderTrainingChart } from '../src/visualization';
-import { ModelWithHyperparameters } from '@galihridhoutomo/tvmai';
+import { ModelWithHyperparameters } from '@galihru/tvmai';
 
 // Mock data
 const mockRecommendation: ModelWithHyperparameters = {
