@@ -1,14 +1,14 @@
 import { TrainingHistory, VisualizationOptions } from './types';
 
 /**
- * Render visualisasi pelatihan menggunakan Canvas 2D
- * Jika environment tanpa DOM (no document/window), function ini akan langsung return.
+ * Render visualisasi pelatihan menggunakan Canvas 2D.
+ * Jika getContext gagal atau tidak tersedia, langsung return.
  */
 export function renderTrainingChart(
   history: TrainingHistory[],
   options: VisualizationOptions = {}
 ): void {
-  // Guard: jika tidak ada DOM, skip rendering
+  // Guard: skip jika tidak ada DOM
   if (typeof document === 'undefined' || typeof window === 'undefined') {
     return;
   }
@@ -22,7 +22,7 @@ export function renderTrainingChart(
       canvas = document.createElement('canvas');
       container.appendChild(canvas);
     } else {
-      // fallback ke body jika element tidak ada
+      // fallback ke body jika elemen tidak ada
       canvas = document.createElement('canvas');
       document.body.appendChild(canvas);
     }
@@ -39,8 +39,14 @@ export function renderTrainingChart(
   canvas.width  = options.width  ?? 800;
   canvas.height = options.height ?? 600;
 
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Could not get 2D context');
+  // Coba dapatkan context, jika error/null maka skip seluruh rendering
+  let ctx: CanvasRenderingContext2D | null = null;
+  try {
+    ctx = canvas.getContext('2d');
+  } catch {
+    return;
+  }
+  if (!ctx) return;
 
   // Background
   ctx.fillStyle = options.theme === 'dark' ? '#333' : '#fff';
