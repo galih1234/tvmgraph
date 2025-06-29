@@ -1,4 +1,4 @@
-import { recommendModel } from '@galihridhoutomo/tvmai';
+import { recommendModel } from '@galihru/tvmai';
 
 /** 
  * Tipe rekomendasi model lengkap dengan hyperparameters 
