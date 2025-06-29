@@ -1,5 +1,5 @@
 {
-  "name": "tvmaigraph",
+  "name": "@galih1234/tvmaigraph",
   "version": "1.0.0",
   "description": "Visualization tools for TVMAI model training simulations",
   "main": "dist/index.js",
