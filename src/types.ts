@@ -1,4 +1,4 @@
-import { ModelWithHyperparameters } from '@galihridhoutomo/tvmai';
+import { ModelWithHyperparameters } from '@galih1234/tvmai';
 
 export interface TrainingHistory {
   epoch: number;
