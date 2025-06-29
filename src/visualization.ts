@@ -1,4 +1,4 @@
-import { TrainingHistory } from './types';
+import { TrainingHistory, VisualizationOptions } from './types';
 
 /**
  * Render visualisasi pelatihan menggunakan Chart.js
@@ -38,7 +38,6 @@ export function renderTrainingChart(
   if (!ctx) throw new Error('Could not get 2D context');
   
   // Implementasi rendering chart
-  // (Dalam implementasi nyata, ini akan menggunakan Chart.js)
   ctx.fillStyle = options.theme === 'dark' ? '#333' : '#fff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
@@ -54,9 +53,7 @@ export function renderTrainingChart(
   history.forEach((point, i) => {
     const x = 50 + (i / (history.length - 1)) * (canvas.width - 100);
     const y = canvas.height - 50 - (point.loss * (canvas.height - 100));
-    
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
   ctx.stroke();
   
@@ -67,9 +64,7 @@ export function renderTrainingChart(
   history.forEach((point, i) => {
     const x = 50 + (i / (history.length - 1)) * (canvas.width - 100);
     const y = canvas.height - 50 - (point.accuracy * (canvas.height - 100));
-    
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
   ctx.stroke();
   
