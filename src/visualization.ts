@@ -2,13 +2,17 @@ import { TrainingHistory, VisualizationOptions } from './types';
 
 /**
  * Render visualisasi pelatihan menggunakan Canvas 2D
- * @param history Data history pelatihan
- * @param options Opsi visualisasi
+ * Jika environment tanpa DOM (no document/window), function ini akan langsung return.
  */
 export function renderTrainingChart(
   history: TrainingHistory[],
   options: VisualizationOptions = {}
 ): void {
+  // Guard: jika tidak ada DOM, skip rendering
+  if (typeof document === 'undefined' || typeof window === 'undefined') {
+    return;
+  }
+
   const canvasId = 'tvmai-training-chart';
   let canvas: HTMLCanvasElement;
 
@@ -18,7 +22,7 @@ export function renderTrainingChart(
       canvas = document.createElement('canvas');
       container.appendChild(canvas);
     } else {
-      // fallback ke body jika elemen tidak ada
+      // fallback ke body jika element tidak ada
       canvas = document.createElement('canvas');
       document.body.appendChild(canvas);
     }
