@@ -1,4 +1,3 @@
-// src/index.ts
 import { ModelWithHyperparameters } from '@galih1234/tvmai';
 import { simulateTraining } from './simulation';
 import { renderTrainingChart } from './visualization';
