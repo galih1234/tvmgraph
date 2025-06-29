@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Maksimum pull request terbuka sekaligus
+    open-pull-requests-limit: 5
+    ignore:
+    - dependency-name: "glob"
+      versions: [">0.1.5"]
