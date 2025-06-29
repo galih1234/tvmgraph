@@ -1,4 +1,4 @@
-import { ModelWithHyperparameters } from '@galihridhoutomo/tvmai';
+import { ModelWithHyperparameters } from '@galih1234/tvmai';
 import { TrainingHistory } from './types';
 
 /**
