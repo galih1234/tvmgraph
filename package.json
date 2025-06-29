@@ -19,7 +19,8 @@
   "author": "Galih Ridho Utomo",
   "license": "MIT",
   "dependencies": {
-    "@galihridhoutomo/tvmai": "^0.1.7"
+    "@galihridhoutomo/tvmai": "^0.1.7",
+    "jsdom": "^22.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
