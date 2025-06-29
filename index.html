@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVMAI Training Visualizer</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #7209b7;
+            --dark: #1a1c23;
+            --light: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1c23 0%, #2d2f3d 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .model-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .model-detail {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .model-detail h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .param-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .param-card {
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .param-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 10px 0;
+            color: #4cc9f0;
+        }
+        
+        .param-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .visualization-container {
+            margin-top: 30px;
+        }
+        
+        #training-chart {
+            width: 100%;
+            height: 500px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #3a56d4;
+            transform: translateY(-3px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .param-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TVMAI Training Visualizer</h1>
+            <p>Visualisasi pelatihan model AI berdasarkan rekomendasi TVMAI</p>
+        </header>
+        
+        <div class="card">
+            <h2>Rekomendasi Model</h2>
+            <div class="model-info">
+                <div class="model-detail">
+                    <h3>Model Architecture</h3>
+                    <div id="model-name">MobileNetV2</div>
+                    <div id="model-paper" style="margin-top: 10px; color: rgba(255,255,255,0.7);">
+                        MobileNetV2: Inverted Residuals and Linear Bottlenecks
+                    </div>
+                </div>
+                
+                <div class="model-detail">
+                    <h3>Hyperparameters</h3>
+                    <div class="param-grid">
+                        <div class="param-card">
+                            <div class="param-value" id="epochs-value">50</div>
+                            <div class="param-label">Epochs</div>
+                        </div>
+                        <div class="param-card">
+                            <div class="param-value" id="lr-value">0.00125</div>
+                            <div class="param-label">Learning Rate</div>
+                        </div>
+                        <div class="param-card">
+                            <div class="param-value" id="batch-value">32</div>
+                            <div class="param-label">Batch Size</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="visualization-container">
+                <h3>Visualisasi Pelatihan</h3>
+                <p>Simulasi proses pelatihan model dengan parameter yang direkomendasikan</p>
+                
+                <div id="training-chart">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Mempersiapkan visualisasi...</p>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn" id="simulate-btn">
+                        <i class="fas fa-play"></i> Mulai Simulasi
+                    </button>
+                    <button class="btn btn-outline" id="reset-btn">
+                        <i class="fas fa-redo"></i> Ulangi
+                    </button>
+                    <button class="btn btn-outline" id="download-btn">
+                        <i class="fas fa-download"></i> Unduh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import modul TVMAI Visualizer
+        import { simulateTraining, visualizeTraining } from 'https://cdn.jsdelivr.net/npm/tvmai-visualizer@1.0.0/dist/index.js';
+        
+        // DOM Elements
+        const simulateBtn = document.getElementById('simulate-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const chartContainer = document.getElementById('training-chart');
+        const loadingElement = chartContainer.querySelector('.loading');
+        
+        // Data simulasi
+        let trainingHistory = null;
+        
+        // Setup model recommendation
+        const recommendation = {
+            model: 'MobileNetV2',
+            layers: [
+                { type: 'convolution', filters: 32, kernel: 3, activation: 'relu' },
+                { type: 'depthwise-conv', kernel: 3 },
+                { type: 'pointwise-conv', filters: 64 },
+                { type: 'global-average-pooling' }
+            ],
+            paper: 'MobileNetV2: Inverted Residuals and Linear Bottlenecks (Sandler, 2018)',
+            hyperparameters: {
+                epochs: 50,
+                learningRate: 0.00125,
+                batchSize: 32,
+                validationSplit: 0.2,
+                earlyStopping: true
+            },
+            explanation: 'Model ringan untuk dataset gambar dengan kompleksitas rendah'
+        };
+        
+        // Event listeners
+        simulateBtn.addEventListener('click', runSimulation);
+        resetBtn.addEventListener('click', resetSimulation);
+        downloadBtn.addEventListener('click', downloadData);
+        
+        // Initialize UI
+        document.getElementById('model-name').textContent = recommendation.model;
+        document.getElementById('model-paper').textContent = recommendation.paper;
+        document.getElementById('epochs-value').textContent = recommendation.hyperparameters.epochs;
+        document.getElementById('lr-value').textContent = recommendation.hyperparameters.learningRate.toFixed(5);
+        document.getElementById('batch-value').textContent = recommendation.hyperparameters.batchSize;
+        
+        // Run simulation
+        async function runSimulation() {
+            try {
+                simulateBtn.disabled = true;
+                loadingElement.style.display = 'block';
+                
+                // Simulasi pelatihan
+                trainingHistory = simulateTraining(recommendation);
+                
+                // Render visualisasi
+                visualizeTraining(recommendation, {
+                    targetElement: 'training-chart',
+                    theme: 'dark',
+                    width: chartContainer.clientWidth,
+                    height: 500
+                });
+                
+                loadingElement.style.display = 'none';
+                resetBtn.disabled = false;
+                downloadBtn.disabled = false;
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error: ${error.message}`);
+                simulateBtn.disabled = false;
+                loadingElement.style.display = 'none';
+            }
+        }
+        
+        function resetSimulation() {
+            chartContainer.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Mempersiapkan visualisasi...</p>
+                </div>
+            `;
+            loadingElement = chartContainer.querySelector('.loading');
+            trainingHistory = null;
+            simulateBtn.disabled = false;
+            resetBtn.disabled = true;
+            downloadBtn.disabled = true;
+        }
+        
+        function downloadData() {
+            if (!trainingHistory) return;
+            
+            const csvContent = [
+                ['Epoch', 'Loss', 'Validation Loss', 'Accuracy', 'Validation Accuracy', 'Learning Rate'],
+                ...trainingHistory.map(epoch => [
+                    epoch.epoch,
+                    epoch.loss.toFixed(4),
+                    epoch.val_loss.toFixed(4),
+                    epoch.accuracy.toFixed(4),
+                    epoch.val_accuracy.toFixed(4),
+                    epoch.lr.toFixed(6)
+                ])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `tvmai_training_data_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>
