@@ -8,4 +8,4 @@ updates:
     open-pull-requests-limit: 5
     ignore:
     - dependency-name: "@galihru/tvmai"
-      versions: [">0.1.5"]
+      versions: [">0.0.2"]
