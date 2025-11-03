@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@galihru/tvmai": "^0.0.2",
-    "jsdom": "^26.1.0"
+    "jsdom": "^27.1.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
